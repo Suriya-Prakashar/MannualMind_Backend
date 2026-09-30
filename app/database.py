@@ -32,6 +32,17 @@ class MongoDB:
         except ConnectionFailure as error:
             print(f"MongoDB connection failed: {error}")
             raise
+    
+    def insert_document(self, document):
+        result = self.collection.insert_one(document)
+        return str(result.inserted_id)
+
+    def find_document(self, document_id):
+        from bson import ObjectId
+
+        return self.collection.find_one(
+            {"_id": ObjectId(document_id)}
+        )
 
     def close(self):
         if self.client:
