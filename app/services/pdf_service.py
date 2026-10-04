@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 
-import fitz
+import pymupdf
 
 
 def extract_text_and_images_from_pdf(
@@ -37,7 +37,7 @@ def extract_text_and_images_from_pdf(
 
     pages = []
 
-    with fitz.open(pdf_path) as pdf:
+    with pymupdf.open(pdf_path) as pdf:
 
         for page_number, page in enumerate(
             pdf,

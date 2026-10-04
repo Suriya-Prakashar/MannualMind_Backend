@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
 
 from app.config import (
     MONGODB_URI,
@@ -13,41 +12,56 @@ class MongoDB:
         self.client = None
         self.database = None
         self.collection = None
+        self.chunks_collection = None
 
     def connect(self):
-        try:
-            self.client = MongoClient(
-                MONGODB_URI,
-                serverSelectionTimeoutMS=5000,
-            )
+        self.client = MongoClient(MONGODB_URI)
 
-            # Verify MongoDB connection
-            self.client.admin.command("ping")
+        self.database = self.client[
+            MONGODB_DATABASE
+        ]
 
-            self.database = self.client[MONGODB_DATABASE]
-            self.collection = self.database[MONGODB_COLLECTION]
+        # Existing documents collection
+        self.collection = self.database[
+            MONGODB_COLLECTION
+        ]
 
-            print("MongoDB connected successfully")
+        # New chunks collection
+        self.chunks_collection = self.database[
+            "chunks"
+        ]
 
-        except ConnectionFailure as error:
-            print(f"MongoDB connection failed: {error}")
-            raise
-    
-    def insert_document(self, document):
-        result = self.collection.insert_one(document)
-        return str(result.inserted_id)
+        # Verify connection
+        self.client.admin.command("ping")
+
+        print("MongoDB connected successfully")
+
+    def close(self):
+        if self.client:
+            self.client.close()
+
+            self.client = None
+            self.database = None
+            self.collection = None
+            self.chunks_collection = None
+
+            print("MongoDB connection closed")
+
+    def insert_document(self, document: dict):
+        result = self.collection.insert_one(
+            document
+        )
+
+        return result.inserted_id
 
     def find_document(self, document_id):
         from bson import ObjectId
 
         return self.collection.find_one(
-            {"_id": ObjectId(document_id)}
+            {
+                "_id": ObjectId(document_id)
+            }
         )
-
-    def close(self):
-        if self.client:
-            self.client.close()
-            print("MongoDB connection closed")
 
 
 mongodb = MongoDB()

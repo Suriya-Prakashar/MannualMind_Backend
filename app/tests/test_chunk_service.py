@@ -1,8 +1,7 @@
 from app.services.chunk_service import create_page_chunks
 
 
-def main():
-
+def test_create_page_chunks():
     sample_text = """
     The hydraulic filter is located on the left
     side of the hydraulic assembly.
@@ -40,27 +39,14 @@ def main():
         chunk_overlap=50,
     )
 
-    print(f"Total chunks: {len(chunks)}")
+    assert len(chunks) > 0
 
-    for chunk in chunks:
-
-        print("\n--------------------")
-
-        print(f"Chunk ID: {chunk['chunk_id']}")
-        print(f"File Hash: {chunk['file_hash']}")
-        print(f"Page: {chunk['page_number']}")
-        print(f"Chunk Index: {chunk['chunk_index']}")
-
-        print("\nText:")
-        print(chunk["text"])
-
-        print("\nImages:")
-
-        for image in chunk["images"]:
-            print(f"  Image ID: {image['image_id']}")
-            print(f"  Filename: {image['filename']}")
-            print(f"  Path: {image['path']}")
-
-
-if __name__ == "__main__":
-    main()
+    for index, chunk in enumerate(chunks, start=1):
+        assert chunk["chunk_id"] == (
+            f"{file_hash}_page_{page_number}_chunk_{index}"
+        )
+        assert chunk["file_hash"] == file_hash
+        assert chunk["page_number"] == page_number
+        assert chunk["chunk_index"] == index
+        assert chunk["text"]
+        assert chunk["images"] == images

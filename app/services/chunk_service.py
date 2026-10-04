@@ -1,17 +1,41 @@
 from typing import List
 
 
+DEFAULT_CHUNK_SIZE = 1000
+DEFAULT_CHUNK_OVERLAP = 200
+
+
 def create_page_chunks(
     text: str,
     file_hash: str,
     page_number: int,
     images: List[dict] | None = None,
-    chunk_size: int = 1000,
-    chunk_overlap: int = 200,
+    chunk_size: int = DEFAULT_CHUNK_SIZE,
+    chunk_overlap: int = DEFAULT_CHUNK_OVERLAP,
 ) -> List[dict]:
+    """
+    Split one PDF page into overlapping text chunks.
+
+    Each chunk keeps:
+    - file hash
+    - page number
+    - chunk index
+    - chunk text
+    - image metadata
+    """
 
     if not text or not text.strip():
         return []
+
+    if chunk_size <= 0:
+        raise ValueError(
+            "chunk_size must be greater than 0"
+        )
+
+    if chunk_overlap < 0:
+        raise ValueError(
+            "chunk_overlap cannot be negative"
+        )
 
     if chunk_overlap >= chunk_size:
         raise ValueError(

@@ -3,16 +3,19 @@ from google import genai
 from app.config import GEMINI_API_KEY
 
 
+EMBEDDING_MODEL = "gemini-embedding-001"
+EMBEDDING_DIMENSION = 768
+
+
 client = genai.Client(
     api_key=GEMINI_API_KEY
 )
 
 
-EMBEDDING_MODEL = "gemini-embedding-001"
-EMBEDDING_DIMENSION = 768
-
-
 def generate_embedding(text: str) -> list[float]:
+    """
+    Generate a 768-dimensional embedding for the given text.
+    """
 
     if not text or not text.strip():
         raise ValueError(
@@ -21,10 +24,18 @@ def generate_embedding(text: str) -> list[float]:
 
     response = client.models.embed_content(
         model=EMBEDDING_MODEL,
-        contents=text,
+        contents=text.strip(),
         config={
             "output_dimensionality": EMBEDDING_DIMENSION,
         },
     )
 
-    return response.embeddings[0].values
+    embedding = response.embeddings[0].values
+
+    if len(embedding) != EMBEDDING_DIMENSION:
+        raise ValueError(
+            f"Unexpected embedding dimension: "
+            f"{len(embedding)}"
+        )
+
+    return embedding
