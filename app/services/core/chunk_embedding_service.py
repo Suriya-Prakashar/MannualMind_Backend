@@ -1,4 +1,4 @@
-from app.services.embedding_service import generate_embedding
+from app.services.core.embedding_service import generate_embedding
 
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:

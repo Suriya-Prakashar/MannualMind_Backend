@@ -1,4 +1,4 @@
-from app.services.file_hash import calculate_file_hash
+from app.services.utils.file_hash import calculate_file_hash
 
 
 def test_calculate_file_hash(tmp_path):

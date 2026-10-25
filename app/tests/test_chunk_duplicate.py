@@ -2,7 +2,7 @@ import pytest
 from pymongo.errors import DuplicateKeyError
 
 from app.database import mongodb
-from app.services.chunk_repository import create_chunk
+from app.services.repositories.chunk_repository import create_chunk
 
 
 def test_duplicate_chunk_is_rejected():

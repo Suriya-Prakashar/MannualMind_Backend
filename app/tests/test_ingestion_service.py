@@ -1,4 +1,4 @@
-from app.services import ingestion_service
+from app.services.core import ingestion_service
 
 
 def test_ingest_pdf(monkeypatch):

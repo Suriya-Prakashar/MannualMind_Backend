@@ -1,6 +1,6 @@
 import pytest
 
-from app.services.embedding_service import (
+from app.services.core.embedding_service import (
     EMBEDDING_DIMENSION,
     generate_embedding,
 )

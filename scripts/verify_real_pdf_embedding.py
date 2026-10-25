@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pymupdf
 
-from app.services.file_hash import calculate_file_hash
-from app.services.chunk_service import create_page_chunks
-from app.services.chunk_embedding_service import embed_chunks
+from app.services.utils.file_hash import calculate_file_hash
+from app.services.core.chunk_service import create_page_chunks
+from app.services.core.chunk_embedding_service import embed_chunks
 
 
 # Number of pages to test

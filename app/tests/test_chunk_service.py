@@ -1,4 +1,4 @@
-from app.services.chunk_service import create_page_chunks
+from app.services.core.chunk_service import create_page_chunks
 
 
 def test_create_page_chunks():

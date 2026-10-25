@@ -1,17 +1,17 @@
-from app.services.chunk_embedding_service import (
+from app.services.core.chunk_embedding_service import (
     embed_chunks,
 )
-from app.services.chunk_repository import (
+from app.services.repositories.chunk_repository import (
     create_chunk,
     find_chunk_by_id,
 )
-from app.services.chunk_service import (
+from app.services.core.chunk_service import (
     create_page_chunks,
 )
-from app.services.file_hash import (
+from app.services.utils.file_hash import (
     calculate_file_hash,
 )
-from app.services.pdf_service import (
+from app.services.core.pdf_service import (
     extract_text_and_images_from_pdf,
 )
 
@@ -56,6 +56,9 @@ def ingest_pdf(
         pdf_path,
         file_hash,
     )
+
+    if not pages:
+        raise ValueError("The PDF file appears to be empty or cannot be parsed.")
 
     if max_pages is not None:
         pages = pages[:max_pages]
@@ -117,6 +120,9 @@ def ingest_pdf(
             create_chunk(chunk)
 
             inserted_chunks += 1
+
+    if total_chunks == 0:
+        raise ValueError("No extractable content (text or images) was found in the PDF. It may be a scanned document without text or an unsupported format.")
 
     return {
         "file_hash": file_hash,

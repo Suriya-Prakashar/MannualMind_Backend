@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from app.database import mongodb
-from app.services.ingestion_service import ingest_pdf
+from app.services.core.ingestion_service import ingest_pdf
 
 
 MANUALS_DIR = Path("data/manuals")

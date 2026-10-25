@@ -1,7 +1,7 @@
-from app.services import file_hash
+from app.services.utils import file_hash
 import pymupdf
 
-from app.services.pdf_service import extract_text_and_images_from_pdf
+from app.services.core.pdf_service import extract_text_and_images_from_pdf
 
 
 def test_extract_text_and_images_from_pdf(tmp_path):

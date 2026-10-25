@@ -1,7 +1,7 @@
 import uuid
 
 from app.database import mongodb
-from app.services.chunk_repository import (
+from app.services.repositories.chunk_repository import (
     create_chunk,
     create_chunks,
     find_chunk_by_id,

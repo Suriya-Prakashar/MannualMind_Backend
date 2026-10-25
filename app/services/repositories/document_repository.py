@@ -23,6 +23,12 @@ def create_document_record(
         "total_images": total_images,
     }
 
-    result = mongodb.collection.insert_one(document)
+    from pymongo.errors import DuplicateKeyError
 
-    return str(result.inserted_id)
+    try:
+        result = mongodb.collection.insert_one(document)
+        return str(result.inserted_id)
+    except DuplicateKeyError:
+        # If the document was inserted concurrently or by a PyMongo retry
+        existing = mongodb.collection.find_one({"file_hash": file_hash})
+        return str(existing["_id"]) if existing else None

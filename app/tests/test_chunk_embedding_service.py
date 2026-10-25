@@ -1,4 +1,4 @@
-from app.services import chunk_embedding_service
+from app.services.core import chunk_embedding_service
 
 
 def test_embed_chunks(monkeypatch):
