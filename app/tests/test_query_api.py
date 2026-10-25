@@ -8,20 +8,20 @@ client = TestClient(app)
 
 
 def test_query_api_success():
-    expected_results = [
+    expected_sources = [
         {
             "chunk_id": "chunk_001",
-            "file_hash": "abc123",
             "page_number": 2,
-            "text": "The engine oil capacity is 4 litres.",
+            "snippet": "The engine oil capacity is 4 litres.",
         }
     ]
 
     mock_response = {
         "query": "What is the engine oil capacity?",
-        "message": "Matching manual chunks retrieved.",
+        "answer": "The engine oil capacity is 4 litres.",
+        "sources": expected_sources,
         "status": "success",
-        "results": expected_results,
+        "message": "Answer generated successfully.",
     }
 
     with patch(
@@ -78,4 +78,18 @@ def test_query_api_value_error():
         )
 
     assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid query parameter"}
+    assert response.json() == {"detail": "Invalid query parameter"}
+
+
+def test_query_api_runtime_error():
+    with patch(
+        "app.api.query.process_query",
+        side_effect=RuntimeError("Model generation failed"),
+    ):
+        response = client.post(
+            "/query/",
+            json={"query": "What is the engine oil capacity?"},
+        )
+
+    assert response.status_code == 502
+    assert response.json() == {"detail": "Model generation failed"}

@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
@@ -15,18 +14,18 @@ class QueryRequest(BaseModel):
     )
 
 
-class RetrievedChunk(BaseModel):
-    chunk_id: str
-    file_hash: str
+class SourceItem(BaseModel):
     page_number: int
-    text: str
+    chunk_id: str
+    snippet: str
 
 
 class QueryResponse(BaseModel):
     query: str
-    message: str
+    answer: str
+    sources: list[SourceItem]
     status: str
-    results: list[RetrievedChunk]
+    message: str
 
 
 @router.post("/", response_model=QueryResponse)
@@ -36,5 +35,10 @@ async def query_document(request: QueryRequest):
     except ValueError as exc:
         raise HTTPException(
             status_code=400,
+            detail=str(exc),
+        ) from exc
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=502,
             detail=str(exc),
         ) from exc

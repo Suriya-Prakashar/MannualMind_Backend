@@ -1,23 +1,43 @@
-
+from app.services.core.answer_generation_service import (
+    FALLBACK_ANSWER,
+    generate_answer,
+)
 from app.services.core.retrieval_service import retrieve_chunks
 
 
 def process_query(query: str) -> dict:
-    """Process a user query and retrieve matching manual chunks."""
+    """Process a user query, retrieve relevant manual chunks, and generate a grounded answer."""
     cleaned_query = query.strip()
 
     if not cleaned_query:
         raise ValueError("Query cannot be empty.")
 
-    results = retrieve_chunks(cleaned_query)
+    chunks = retrieve_chunks(cleaned_query)
+
+    if not chunks:
+        return {
+            "query": cleaned_query,
+            "answer": FALLBACK_ANSWER,
+            "sources": [],
+            "status": "success",
+            "message": "No matching manual chunks found.",
+        }
+
+    answer = generate_answer(cleaned_query, chunks)
+
+    sources = [
+        {
+            "chunk_id": chunk.get("chunk_id", ""),
+            "page_number": chunk.get("page_number", 0),
+            "snippet": chunk.get("text", "").strip(),
+        }
+        for chunk in chunks
+    ]
 
     return {
         "query": cleaned_query,
-        "message": (
-            "Matching manual chunks retrieved."
-            if results
-            else "No matching manual chunks found."
-        ),
+        "answer": answer,
+        "sources": sources,
         "status": "success",
-        "results": results,
+        "message": "Answer generated successfully.",
     }

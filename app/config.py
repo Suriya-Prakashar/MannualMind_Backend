@@ -17,6 +17,12 @@ MONGODB_COLLECTION = os.getenv(
 )
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_GENERATION_MODEL = os.getenv(
+    "GEMINI_GENERATION_MODEL",
+    "gemini-3.5-flash",
+)
+
+
 
 
 if not MONGODB_URI:
