@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from app.api.documents import router as documents_router
 from app.api.query import router as query_router
@@ -47,3 +49,12 @@ async def root():
 
 app.include_router(documents_router)
 app.include_router(query_router)
+
+# Mount extracted PDF images directory for static retrieval
+extracted_images_dir = Path("data") / "extracted"
+extracted_images_dir.mkdir(parents=True, exist_ok=True)
+app.mount(
+    "/static/images",
+    StaticFiles(directory=str(extracted_images_dir)),
+    name="static_images",
+)

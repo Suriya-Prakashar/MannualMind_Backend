@@ -6,3 +6,5 @@ python-multipart
 pymupdf
 google-genai
 httpx
+pydantic
+pytest

@@ -36,6 +36,7 @@ def search_similar_chunks(
                 "file_hash": 1,
                 "page_number": 1,
                 "text": 1,
+                "images": 1,
                 "score": {
                     "$meta": "vectorSearchScore"
                 },

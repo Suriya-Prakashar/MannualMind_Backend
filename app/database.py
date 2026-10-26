@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pymongo import MongoClient
 
 from app.config import (
@@ -55,13 +56,12 @@ class MongoDB:
         return result.inserted_id
 
     def find_document(self, document_id):
-        from bson import ObjectId
-
         return self.collection.find_one(
             {
                 "_id": ObjectId(document_id)
             }
         )
+
 
 
 mongodb = MongoDB()

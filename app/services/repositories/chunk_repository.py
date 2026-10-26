@@ -1,3 +1,5 @@
+import re
+
 from app.database import mongodb
 
 
@@ -51,13 +53,12 @@ def search_chunks_by_keyword(
     This is basic keyword retrieval, not semantic search.
     """
 
-    import re
-
     if not query or not query.strip():
         return []
 
     if limit < 1:
         raise ValueError("limit must be greater than 0")
+
 
     terms = query.strip().split()
 
@@ -78,6 +79,7 @@ def search_chunks_by_keyword(
             "file_hash": 1,
             "page_number": 1,
             "text": 1,
+            "images": 1,
         },
     ).limit(limit)
 
